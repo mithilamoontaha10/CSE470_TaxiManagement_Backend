@@ -123,6 +123,31 @@ async function run() {
             res.send({ driver })
 
         })
+        // Taxi Service Request is posting to databse  for the owner Side:
+        app.post("/owner/serviceRequest", async(req,res)=>{
+            const body = req.body;
+            const result = await TaxiServiceRequestCollections.insertOne(body);
+            res.send(result)
+        })
+
+        // owner see the service Request status
+        app.get("/owner/serviceReqStatus/:email", async(req,res)=>{
+            const emailofOwner = req.params.email;
+            const query= {email: emailofOwner}
+            const result = await TaxiServiceRequestCollections.find(query).toArray()
+            res.send(result);
+
+        })
+
+        // owner withdrow the service Request:
+        app.delete("/owner/withdrowRequest/:id", async(req,res)=>{
+            const vehicleId = req.params.id
+            const query={_id:new ObjectId(vehicleId)}
+            // delete the item based on query
+            const result = await TaxiServiceRequestCollections.deleteOne(query)
+            res.send(result)
+        })
+
        
 
         //get taxi service request from the database for the admin panel
