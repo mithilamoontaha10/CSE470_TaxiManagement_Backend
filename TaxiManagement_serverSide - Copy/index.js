@@ -102,7 +102,27 @@ async function run() {
             res.send({ admin })
 
         })
+        
+// check driverRole
+        app.get("/user/driver/:email", async (req, res) => {
+            // req.params.email ==> making a request body to the server for specific information
+            const emailOfDriver = req.params.email
+            // now with the request body ,run a query to the Database
+            const query = { email: emailOfDriver }
+            // get a result from the database (userCollections) based on query request in the server
+            const result = await userCollections.findOne(query)
 
+            // check the admin role 
+
+            let driver = false
+            if (result) {
+                driver = result.role === "driver" 
+
+            }
+            // if the role is driver, then it pass a response to the client side
+            res.send({ driver })
+
+        })
        
 
         //get taxi service request from the database for the admin panel
@@ -206,6 +226,23 @@ async function run() {
             res.send(result)
 
         })
+
+             // driving request is sent to the databse for the driver side
+          app.post("/driver/drivingReq", async(req,res)=>{
+            const body = req.body;
+            const result = await DrivingRequestCollections.insertOne(body);
+            res.send(result)
+        })
+
+        // Driver see the Driving Request status
+        app.get("/driver/driveReqStatus/:email", async(req,res)=>{
+            const emailofDriver = req.params.email;
+            const query= {email: emailofDriver}
+            const result = await DrivingRequestCollections.find(query).toArray()
+            res.send(result);
+
+        })
+        
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
