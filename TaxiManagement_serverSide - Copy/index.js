@@ -130,14 +130,6 @@ async function run() {
             res.send(result)
         })
 
-        // owner see the service Request status
-        app.get("/owner/serviceReqStatus/:email", async(req,res)=>{
-            const emailofOwner = req.params.email;
-            const query= {email: emailofOwner}
-            const result = await TaxiServiceRequestCollections.find(query).toArray()
-            res.send(result);
-
-        })
 
         // owner withdrow the service Request:
         app.delete("/owner/withdrowRequest/:id", async(req,res)=>{
