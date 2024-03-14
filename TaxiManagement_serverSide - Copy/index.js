@@ -148,7 +148,13 @@ async function run() {
             res.send(result)
         })
 
-       
+        // owner AssignDrivers
+        app.post("/owner/assignDriver", async(req,res)=>{
+            const body= req.body
+            const result = await AssignDriversCollections.insertOne(body)
+            res.send(result)
+
+        })
 
         //get taxi service request from the database for the admin panel
         app.get("/serviceReq", async(req,res)=>{
