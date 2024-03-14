@@ -252,22 +252,7 @@ async function run() {
 
         })
 
-             // driving request is sent to the databse for the driver side
-          app.post("/driver/drivingReq", async(req,res)=>{
-            const body = req.body;
-            const result = await DrivingRequestCollections.insertOne(body);
-            res.send(result)
-        })
-
-        // Driver see the Driving Request status
-        app.get("/driver/driveReqStatus/:email", async(req,res)=>{
-            const emailofDriver = req.params.email;
-            const query= {email: emailofDriver}
-            const result = await DrivingRequestCollections.find(query).toArray()
-            res.send(result);
-
-        })
-        
+    
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
