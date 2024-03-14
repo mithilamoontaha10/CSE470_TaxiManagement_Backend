@@ -148,7 +148,14 @@ async function run() {
             res.send(result)
         })
 
-       
+         // owner AssignDrivers
+        app.post("/owner/assignDriver", async(req,res)=>{
+            const body= req.body
+            const result = await AssignDriversCollections.insertOne(body)
+            res.send(result)
+
+        })
+        
 
         //get taxi service request from the database for the admin panel
         app.get("/serviceReq", async(req,res)=>{
@@ -252,7 +259,17 @@ async function run() {
 
         })
 
-    
+
+        // Driving request is sent to the database for the driver side
+          app.post("/driver/drivingReq", async(req,res)=>{
+            const body = req.body;
+            const result = await DrivingRequestCollections.insertOne(body);
+            res.send(result)
+        })
+
+
+        
+
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
