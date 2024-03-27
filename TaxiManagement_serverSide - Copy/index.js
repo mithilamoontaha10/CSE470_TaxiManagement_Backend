@@ -306,7 +306,61 @@ async function run() {
             res.send(result);
 
         })
-        
+        // DriverRide 
+        app.get("/driverRide/getInfo/:userEmail", async(req,res)=>{
+            const email = req.params.userEmail;
+            const query = {driverEmail:email}
+            const result = await BookRides.find(query).toArray()
+            
+            res.send(result);
+        })
+
+        // DriverCancel the Ride
+       
+        app.patch("/driver/cancelRide/:dt", async(req,res)=>{
+           
+            const time = req.params.dt
+            const query = {currentDate:time}
+            const data = req.body;
+
+            // delete the request 
+            const updatedData = {
+                $set: {
+                    isdriverAccepted: data.isdriverAccepted
+
+                }
+            }
+            
+            const options = { upsert: true }
+            
+            const result = await BookRides.updateOne(query, updatedData, options)
+            
+            res.send(result)
+
+        })
+
+        // driver accept the ride
+        app.patch("/driver/acceptRide/:dt", async(req,res)=>{
+           
+            const time = req.params.dt
+            const query = {currentDate:time}
+            const data = req.body;
+
+            // delete the request 
+            const updatedData = {
+                $set: {
+                    isdriverAccepted: data.isdriverAccepted
+
+                }
+            }
+            
+            const options = { upsert: true }
+            
+            const result = await BookRides.updateOne(query, updatedData, options)
+            
+            res.send(result)
+
+        })
 
 
         // Send a ping to confirm a successful connection
