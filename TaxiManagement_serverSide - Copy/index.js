@@ -35,7 +35,9 @@ async function run() {
         const TaxiServiceRequestCollections = client.db("taxiManagement").collection("serviceRequest");
         const DrivingRequestCollections = client.db("taxiManagement").collection("drivingRequest");
         const AssignDriversCollections = client.db("taxiManagement").collection("assignDriver");
-
+        const BookRides = client.db("taxiManagement").collection("rides");
+        const PaymentCollections = client.db("taxiManagement").collection("payments");
+        const vehicleStatus = client.db("taxiManagement").collection("vehicleStatus");
 
 
 
