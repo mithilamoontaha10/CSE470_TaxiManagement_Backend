@@ -176,7 +176,17 @@ async function run() {
             res.send(result)
 
         })
-        
+        // owner see the vehicle Status
+        // /owner/vehicleStatus
+        app.get("/owner/vehicleStatus/:email", async (req, res) => {
+            const emailofOwner = req.params.email;
+          
+            const query = { ownerEmail:emailofOwner }
+            const result = await vehicleStatus.find(query).toArray()
+            console.log("vs",result);
+            res.send(result);
+
+        })
 
         //get taxi service request from the database for the admin panel
         app.get("/serviceReq", async(req,res)=>{
