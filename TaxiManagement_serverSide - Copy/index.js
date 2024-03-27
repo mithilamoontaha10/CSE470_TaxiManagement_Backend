@@ -121,7 +121,26 @@ async function run() {
             }
             // if the role is driver, then it pass a response to the client side
             res.send({ driver })
+// check passengerRole
+        app.get("/user/passenger/:email", async (req, res) => {
+            // req.params.email ==> making a request body to the server for specific information
+            const emailOfPassenger = req.params.email
+            // now with the request body ,run a query to the Database
+            const query = { email: emailOfPassenger }
+            // get a result from the database (userCollections) based on query request in the server
+            const result = await userCollections.findOne(query)
 
+            // check the admin role 
+
+            let passenger = false
+            if (result) {
+                passenger = result.role === "passenger"
+
+            }
+            // if the role is driver, then it pass a response to the client side
+            res.send({ passenger })
+
+        })
         })
         // Taxi Service Request is posting to databse  for the owner Side:
         app.post("/owner/serviceRequest", async(req,res)=>{
