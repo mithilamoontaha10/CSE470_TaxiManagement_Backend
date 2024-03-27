@@ -474,6 +474,60 @@ async function run() {
             const result = await PaymentCollections.insertOne(data)
             res.send(result)
         })
+         // get the payment Info from the driverSide:
+
+        app.get("/driverPayment/:email", async(req,res)=>{
+            const email = req.params.email
+            const result = await PaymentCollections.aggregate([
+                {
+                    $addFields: {
+                        rideIds: {
+                            $convert: {
+                                input: "$rideId",
+                                to: "objectId"
+                            }
+                        }
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "rides",
+                        localField: "rideIds",
+                        foreignField: "_id",
+                        as: "paymentsInfo"
+                    }
+                },
+                {
+
+                    $unwind: '$paymentsInfo'
+
+                },
+                
+                {
+                    $match: {
+                        "paymentsInfo.driverEmail": email
+                    }
+                },
+                {
+                    $project:{
+                        "vehiclePhoto":"$paymentsInfo.photo",
+                        "driverEmail":"$paymentsInfo.driverEmail",
+                        "route":"$paymentsInfo.route",
+                        "amount":"$paymentsInfo.amount",
+                        "passengerEmail":"$paymentsInfo.passengerEmail",
+                        "passengerPhoto":"$paymentsInfo.passengerPhoto",
+                        "currentDateTime":1
+                       
+
+
+                    }
+                }
+
+            ]).toArray()
+           res.send(result)
+           
+        })
+
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
