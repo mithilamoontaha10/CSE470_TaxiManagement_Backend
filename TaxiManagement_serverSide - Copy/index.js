@@ -361,7 +361,12 @@ async function run() {
             res.send(result)
 
         })
-
+//driver Update the vehicle Status
+        app.post("/driver/vehicleStatus", async(req,res)=>{
+            const body = req.body;
+            const result = await vehicleStatus.insertOne(body);
+            res.send(result) 
+        }) 
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
