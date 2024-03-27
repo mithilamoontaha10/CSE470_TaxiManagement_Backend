@@ -366,7 +366,76 @@ async function run() {
             const body = req.body;
             const result = await vehicleStatus.insertOne(body);
             res.send(result) 
-        }) 
+        })
+        // -----------------------------------------------
+
+
+        // Avaiable Service
+        // Here,we Perform aggregation between two tables.(serviceRequest and assignDriver)
+        // By aggregating two tables , we create a new tables 
+
+        app.get("/showService", async (req, res) => {
+            const result = await AssignDriversCollections.aggregate([
+
+                {
+                    $addFields: {
+                        ServiceReqIds: {
+                            $convert: {
+                                input: "$serviceId",
+                                to: "objectId"
+                            }
+                        }
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "serviceRequest",
+                        localField: "ServiceReqIds",
+                        foreignField: "_id",
+                        as: "rides"
+                    }
+                },
+                {
+
+                    $unwind: '$rides'
+
+                },
+                {
+                    $lookup:{
+                        from:"drivingRequest",
+                        localField:"driverEmail",
+                        foreignField:"email",
+                        as:"driverInfo"
+                        
+
+                    }
+
+                },
+                {
+                    $unwind: '$driverInfo' 
+                },
+                {
+                    $project:{
+                        "businessName":"$rides.businessName",
+                        "email":"$rides.email",
+                        "transportType":"$rides.transportType",
+                        "route":"$rides.route",
+                        "fareRate":"$rides.fareRate",
+                        "brta":"$rides.brta",
+                        "photo":"$rides.photo",
+                        "status":"$rides.status",
+                        "driverEmail":"$driverEmail",
+                        "driverPhoto": "$driverInfo.photo",
+                        "driverStatus":"$driverInfo.status",
+                        "driverName":"$driverInfo.name"
+                        
+                        
+                    }
+                }
+            ]).toArray()
+            res.send(result)
+        })
+
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
