@@ -442,6 +442,28 @@ async function run() {
             const result = await BookRides.insertOne(body);
             res.send(result)
         })
+// pasenger Cancel the Riding Request:
+        app.patch("/passenger/cancelRide/:brta", async(req,res)=>{
+          
+            const brtaVehicle = req.params.brta
+            const query = {brta:brtaVehicle}
+            const data = req.body;
+
+            // delete the request 
+            const updatedData = {
+                $set: {
+                    ispassengerBooked: data.ispassengerBooked
+
+                }
+            }
+            
+            const options = { upsert: true }
+            
+            const result = await BookRides.updateOne(query, updatedData, options)
+            
+            res.send(result)
+
+        })
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
