@@ -442,6 +442,13 @@ async function run() {
             const result = await BookRides.insertOne(body);
             res.send(result)
         })
+// get the Rides Info from the passengerSide:
+        app.get("/passengerRide/getInfo/:userEmail", async(req,res)=>{
+            const email = req.params.userEmail;
+            const query = {passengerEmail:email}
+            const result = await BookRides.find(query).toArray()
+            res.send(result);
+        })
 // pasenger Cancel the Riding Request:
         app.patch("/passenger/cancelRide/:brta", async(req,res)=>{
           
